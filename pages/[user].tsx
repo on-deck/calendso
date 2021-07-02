@@ -50,7 +50,7 @@ export default function User(props): User {
 export const getServerSideProps: GetServerSideProps = async (context) => {
   const user = await prisma.user.findFirst({
     where: {
-      username: context.query.user.toLowerCase(),
+      username: context.query.user.toString(),
     },
     select: {
       id: true,

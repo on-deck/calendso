@@ -38,7 +38,7 @@ export default function Settings(props) {
   async function updateProfileHandler(event) {
     event.preventDefault();
 
-    const enteredUsername = usernameRef.current.value.toLowerCase();
+    const enteredUsername = usernameRef.current.value;
     const enteredName = nameRef.current.value;
     const enteredDescription = descriptionRef.current.value;
     const enteredAvatar = avatarRef.current.value;
@@ -91,7 +91,7 @@ export default function Settings(props) {
 
             <div className="mt-6 flex flex-col lg:flex-row">
               <div className="flex-grow space-y-6">
-                <div className="flex">
+                <div className="flex hidden">
                   <div className="w-1/2 mr-2">
                     <UsernameInput ref={usernameRef} defaultValue={props.user.username} />
                   </div>

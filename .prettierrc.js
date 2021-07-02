@@ -7,4 +7,5 @@ module.exports = {
   semi: true,
   printWidth: 110,
   arrowParens: "always",
+  tabWidth: 4,
 };

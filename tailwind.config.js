@@ -27,6 +27,9 @@ module.exports = {
           800: "#0277bd",
           900: "#01579b",
         },
+        ondeck: {
+          DEFAULT: "#315CEA",
+        },
       },
       maxHeight: {
         97: "25rem",
