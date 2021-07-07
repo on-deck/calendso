@@ -1,6 +1,7 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import prisma from "../../../lib/prisma";
+import { analytics, AnalyticsTrackingEvent } from "../../../lib/analytics";
 
 export default NextAuth({
     session: {
@@ -20,6 +21,9 @@ export default NextAuth({
     ],
     callbacks: {
         async signIn(user, account, profile) {
+            const userId = profile?.["https://beondeck.com/fellow_id"] as number;
+            analytics.identify({ userId });
+
             const calendsoUser = await prisma.user.findFirst({
                 where: {
                     email: user.email,
@@ -33,35 +37,39 @@ export default NextAuth({
                         name: user.name,
                         email: user.email,
                         emailVerified: new Date(),
-                        username: String(profile["https://beondeck.com/fellow_id"]),
+                        username: String(userId),
+                        id: userId,
                     },
+                });
+                analytics.track({
+                    event: AnalyticsTrackingEvent.LoginFirstTime,
+                    properties: { category: "Auth", action: "Signed Up" },
+                    userId,
+                });
+            } else {
+                analytics.track({
+                    event: AnalyticsTrackingEvent.LoginSuccess,
+                    properties: { category: "Auth", action: "Logged In" },
+                    userId,
                 });
             }
 
             return true;
         },
         async jwt(token, user, account, profile) {
-            // Add username to the token right after signin
-            if (user?.username) {
-                token.id = user.id;
-                token.username = user.username;
-            }
-            if (profile?.["https://beondeck.com/fellow_id"]) {
-                const calendsoUser = await prisma.user.findFirst({
-                    where: {
-                        email: user.email,
-                    },
-                });
+            const userId = profile?.["https://beondeck.com/fellow_id"] as number;
 
-                token.id = calendsoUser.id;
-                token.username = String(profile["https://beondeck.com/fellow_id"]);
+            if (userId) {
+                token.id = userId;
+                token.username = userId;
             }
+
             return token;
         },
         async session(session, token) {
             session.user = session.user || {};
-            session.user.id = token.id;
-            session.user.username = token.username;
+            (session.user as Record<string, unknown>).id = token.id;
+            (session.user as Record<string, unknown>).username = token.username;
             return session;
         },
     },

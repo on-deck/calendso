@@ -1,15 +1,18 @@
-import '../styles/globals.css';
-import {createTelemetryClient, TelemetryProvider} from '../lib/telemetry';
-import { Provider } from 'next-auth/client';
+import "../styles/globals.css";
+import { Provider } from "next-auth/client";
+import Router from "next/router";
+
+// Track client-side page views with Segment
+Router.events.on("routeChangeComplete", (url) => {
+    window.analytics.page(url);
+});
 
 function MyApp({ Component, pageProps }) {
-  return (
-      <TelemetryProvider value={createTelemetryClient()}>
+    return (
         <Provider session={pageProps.session}>
             <Component {...pageProps} />
         </Provider>
-      </TelemetryProvider>
-  );
+    );
 }
 
 export default MyApp;
