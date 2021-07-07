@@ -33,7 +33,7 @@ export default NextAuth({
                         name: user.name,
                         email: user.email,
                         emailVerified: new Date(),
-                        username: profile["https://beondeck.com/slack_id"] as string,
+                        username: String(profile["https://beondeck.com/fellow_id"]),
                     },
                 });
             }
@@ -46,7 +46,7 @@ export default NextAuth({
                 token.id = user.id;
                 token.username = user.username;
             }
-            if (profile?.["https://beondeck.com/slack_id"]) {
+            if (profile?.["https://beondeck.com/fellow_id"]) {
                 const calendsoUser = await prisma.user.findFirst({
                     where: {
                         email: user.email,
@@ -54,7 +54,7 @@ export default NextAuth({
                 });
 
                 token.id = calendsoUser.id;
-                token.username = profile["https://beondeck.com/slack_id"] as string;
+                token.username = String(profile["https://beondeck.com/fellow_id"]);
             }
             return token;
         },
