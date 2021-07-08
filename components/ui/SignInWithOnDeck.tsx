@@ -22,7 +22,7 @@ export default function Button({ className }) {
         <button
             type="submit"
             className={classNames(
-                "btn bg-ondeck text-white flex rounded-full font-inter text-[15px] leading-[22px] font-semibold h-10 items-center py-3 px-6 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ondeck",
+                "antialiased btn bg-ondeck text-white flex rounded-full font-inter text-[15px] leading-[22px] font-semibold h-10 items-center py-3 px-6 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ondeck",
                 className
             )}
             onClick={handleSignIn}>

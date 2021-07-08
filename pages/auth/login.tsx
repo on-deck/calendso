@@ -22,10 +22,10 @@ export default function Login() {
             <div className="h-full bg-gray-50">
                 <div className="p-4 h-2/3 bg-ondeck relative flex justify-center">
                     <div className="text-center text-white max-w-xl ">
-                        <h1 className="font-raleway mt-12 sm:mt-24 text-[44px] sm:text-6xl">
+                        <h1 className="antialiased font-raleway mt-12 sm:mt-24 text-[44px] sm:text-6xl">
                             Offer Feedback
                         </h1>
-                        <p className="font-raleway text-[21px] leading-[30px] mt-6">
+                        <p className="antialiased font-raleway text-[21px] leading-[30px] mt-6">
                             Set your availability for feedback sessions in less than 5 minutes by connecting
                             your On Deck account to Calendso.
                         </p>
@@ -49,10 +49,10 @@ export default function Login() {
                 <div className="relative h-1/3">
                     <div className="absolute max-w-xl mx-auto -top-1/2 text-black text-left absolute inset-x-0">
                         <div className="m-4 bg-white p-10 shadow rounded-lg">
-                            <h2 className="text-[24px] leading-[32px] font-bold font-raleway">
+                            <h2 className="antialiased text-[24px] leading-[32px] font-bold font-raleway">
                                 Sign In to Calendso
                             </h2>
-                            <p className="text-[15px] leading-[21px] font-inter mt-2 font-inter">
+                            <p className="antialiased text-[15px] leading-[21px] font-inter mt-2 font-inter">
                                 You will be signed in using your On Deck account.
                             </p>
                             <SignInWithOnDeck className="mt-8" />
