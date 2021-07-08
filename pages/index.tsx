@@ -124,7 +124,7 @@ export default function Home(props) {
                                                 </div>
                                             </div>
                                             <div className="ml-5 flex-shrink-0">
-                                                <Link href={"/" + session.user.username + "/" + type.slug}>
+                                                <Link href={"/" + session?.user.username + "/" + type.slug}>
                                                     <a
                                                         target="_blank"
                                                         className="text-blue-600 hover:text-blue-900 mr-2 font-medium">

@@ -1,3 +1,4 @@
+import classNames from "classnames";
 import Head from "next/head";
 import Link from "next/link";
 import { useRouter } from "next/router";
@@ -147,6 +148,7 @@ export default function Book(props: any): JSX.Element {
     };
 
     const isFeedback = ["pitch-feedback", "product-feedback"].includes(props.eventType.slug);
+    console.log("props.eventType.slug", props.eventType.slug);
 
     return (
         <div>
@@ -188,7 +190,7 @@ export default function Book(props: any): JSX.Element {
                         </div>
                         <div className="sm:w-1/2 pl-8 pr-4">
                             <form onSubmit={bookingHandler}>
-                                <div className={"mb-4" + (!isFeedback ? " hidden" : "")}>
+                                <div className={classNames("mb-4", { hidden: isFeedback && !!name })}>
                                     <label htmlFor="name" className="block text-sm font-medium text-gray-700">
                                         Your name
                                     </label>
