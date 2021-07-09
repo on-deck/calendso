@@ -11,8 +11,6 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@master
-      - uses: Embraser01/update-git-branch-action@v1.0.0
-        with:
-          branch: staging
-          force: 1
-          githubToken: ${{ secrets.ON_DECK_BOT_TOKEN }}
+      - run: |
+          git branch -f staging
+          git push -f origin staging:staging
