@@ -14,7 +14,7 @@ import { LocationType } from "../../lib/location";
 import Avatar from "../../components/Avatar";
 import Button from "../../components/ui/Button";
 import { EventTypeCustomInputType } from "../../lib/eventTypeInput";
-import { AnalyticsTrackingEvent } from "@lib/analytics";
+import { analytics, AnalyticsTrackingEvent } from "@lib/analytics";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -37,10 +37,14 @@ export default function Book(props: any): JSX.Element {
         setPreferredTimeZone(localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess());
         setIs24h(!!localStorage.getItem("timeOption.is24hClock"));
 
-        window.analytics.track(AnalyticsTrackingEvent.TimeSelected, {
-            date,
-            eventType: props.eventType.slug,
-            providerId: user,
+        analytics.track({
+            event: AnalyticsTrackingEvent.TimeSelected,
+            properties: {
+                date,
+                eventType: props.eventType.slug,
+                providerId: user,
+            },
+            userId: user.toString(),
         });
     });
 
@@ -106,14 +110,18 @@ export default function Book(props: any): JSX.Element {
                 }
             }
 
-            analytics.track(AnalyticsTrackingEvent.BookingConfirmed, {
-                start: dayjs(date).format(),
-                end: dayjs(date).add(props.eventType.length, "minute").format(),
-                userName: event.target.name.value,
-                userEmail: event.target.email.value,
-                eventType: props.eventType.slug,
-                providerId: props.user.id,
-                booking: rescheduleUid,
+            analytics.track({
+                event: AnalyticsTrackingEvent.BookingConfirmed,
+                properties: {
+                    start: dayjs(date).format(),
+                    end: dayjs(date).add(props.eventType.length, "minute").format(),
+                    userName: event.target.name.value,
+                    userEmail: event.target.email.value,
+                    eventType: props.eventType.slug,
+                    providerId: props.user.id,
+                    booking: rescheduleUid,
+                },
+                userId: props.user.id,
             });
 
             /*const res = await */ fetch("/api/book/" + user, {

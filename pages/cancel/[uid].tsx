@@ -8,16 +8,12 @@ import isSameOrBefore from "dayjs/plugin/isSameOrBefore";
 import isBetween from "dayjs/plugin/isBetween";
 import utc from "dayjs/plugin/utc";
 import timezone from "dayjs/plugin/timezone";
-import { AnalyticsTrackingEvent } from "@lib/analytics";
+import { analytics, AnalyticsTrackingEvent } from "@lib/analytics";
 
 dayjs.extend(isSameOrBefore);
 dayjs.extend(isBetween);
 dayjs.extend(utc);
 dayjs.extend(timezone);
-
-function classNames(...classes) {
-    return classes.filter(Boolean).join(" ");
-}
 
 export default function Type(props) {
     // Get router variables
@@ -31,14 +27,17 @@ export default function Type(props) {
     const cancellationHandler = async (event) => {
         setLoading(true);
 
-        let payload = {
+        const payload = {
             uid: uid,
         };
 
-        analytics.track(AnalyticsTrackingEvent.BookingCancelled, {
-            user: props.user.id,
-            eventType: props.eventType.slug,
-            booking: props.booking.uid,
+        analytics.track({
+            event: AnalyticsTrackingEvent.BookingCancelled,
+            userId: props.user.id,
+            properties: {
+                eventType: props.eventType.slug,
+                booking: props.booking.uid,
+            },
         });
 
         const res = await fetch("/api/cancel", {

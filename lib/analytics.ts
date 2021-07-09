@@ -7,6 +7,7 @@ export enum AnalyticsTrackingEvent {
     BookingConfirmed = "bookingConfirmed",
     LoginFirstTime = "loginFirstTime",
     LoginSuccess = "loginSuccess",
+    LoginNotAllowed = "loginNotAllowed",
     DateSelected = "dateSelected",
     TimeSelected = "timeSelected",
 }
