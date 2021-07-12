@@ -77,10 +77,10 @@ export default function Book(props: any): JSX.Element {
                     })
                     .join("\n\n");
             }
-            if (!!notes && !!event.target.notes.value) {
-                notes += "\n\nAdditional notes:\n" + event.target.notes.value;
+            if (!!notes && !!event.target.notes?.value) {
+                notes += "\n\nAdditional notes:\n" + event.target.notes?.value ?? "";
             } else {
-                notes += event.target.notes.value;
+                notes += event.target.notes?.value ?? "";
             }
 
             const payload = {
