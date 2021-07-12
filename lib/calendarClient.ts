@@ -141,6 +141,8 @@ interface CalendarApiAdapter {
 
   deleteEvent(uid: string);
 
+  watchEvent(uid: string);
+
   getAvailability(dateFrom, dateTo, selectedCalendars: IntegrationCalendar[]): Promise<any>;
 
   listCalendars(): Promise<IntegrationCalendar[]>;
@@ -451,6 +453,32 @@ const GoogleCalendar = (credential): CalendarApiAdapter => {
           );
         })
       ),
+    watchEvent: (uid: string) =>
+      new Promise((resolve, reject) =>
+        auth.getToken().then((myGoogleAuth) => {
+          const calendar = google.calendar({ version: "v3", auth: myGoogleAuth });
+          calendar.events.watch(
+            {
+              auth: myGoogleAuth,
+              calendarId: "primary",
+              requestBody: {
+                id: uid,
+                eventId: uid,
+                type: "webhook",
+                address: process.env.BASE_URL + "/api/integrations/googlecalendar/webhook",
+              },
+            },
+            (err, event) => {
+              if (err) {
+                console.error("There was an error contacting google calendar service: ", err);
+                return reject(err);
+              }
+              console.log("watch:", JSON.stringify(event.data));
+              return resolve(event.data);
+            }
+          );
+        })
+      ),
     listCalendars: () =>
       new Promise((resolve, reject) =>
         auth.getToken().then((myGoogleAuth) => {
@@ -562,6 +590,14 @@ const updateEvent = async (credential, uidToUpdate: string, calEvent: CalendarEv
   };
 };
 
+const watchEvent = (credential, uid: string): Promise<any> => {
+  if (credential) {
+    return calendars([credential])[0].watchEvent(uid);
+  }
+
+  return Promise.resolve({});
+};
+
 const deleteEvent = (credential, uid: string): Promise<any> => {
   if (credential) {
     return calendars([credential])[0].deleteEvent(uid);
@@ -575,6 +611,7 @@ export {
   createEvent,
   updateEvent,
   deleteEvent,
+  watchEvent,
   CalendarEvent,
   listCalendars,
   IntegrationCalendar,

@@ -84,33 +84,34 @@ export default function Book(props: any): JSX.Element {
             }
 
             const payload = {
-                start: dayjs(date).format(),
-                end: dayjs(date).add(props.eventType.length, "minute").format(),
-                name: event.target.name.value,
-                email: event.target.email.value,
-                notes: notes,
-                timeZone: preferredTimeZone,
-                eventTypeId: props.eventType.id,
-                rescheduleUid: rescheduleUid,
+              start: dayjs(date).format(),
+              end: dayjs(date).add(props.eventType.length, "minute").format(),
+              name: event.target.name.value,
+              email: event.target.email.value,
+              notes: notes,
+              timeZone: preferredTimeZone,
+              eventTypeId: props.eventType.id,
+              rescheduleUid: rescheduleUid,
             };
 
             if (selectedLocation) {
-                switch (selectedLocation) {
-                    case LocationType.Phone:
-                        payload["location"] = event.target.phone.value;
-                        break;
+              switch (selectedLocation) {
+                case LocationType.Phone:
+                  payload["location"] = event.target.phone.value;
+                  break;
 
-                    case LocationType.InPerson:
-                        payload["location"] = locationInfo(selectedLocation).address;
-                        break;
+                case LocationType.InPerson:
+                  payload["location"] = locationInfo(selectedLocation).address;
+                  break;
 
-                    // Catches all other location types, such as Google Meet, Zoom etc.
-                    default:
-                        payload["location"] = selectedLocation;
-                }
+                // Catches all other location types, such as Google Meet, Zoom etc.
+                default:
+                  payload["location"] = selectedLocation;
+              }
             }
-
+            console.log("props.user", props.user);
             analytics.track({
+<<<<<<< HEAD
                 event: AnalyticsTrackingEvent.BookingConfirmed,
                 properties: {
                     start: dayjs(date).format(),
@@ -122,6 +123,19 @@ export default function Book(props: any): JSX.Element {
                     booking: rescheduleUid,
                 },
                 userId: props.user.username,
+=======
+              event: AnalyticsTrackingEvent.BookingConfirmed,
+              properties: {
+                start: dayjs(date).format(),
+                end: dayjs(date).add(props.eventType.length, "minute").format(),
+                userName: event.target.name.value,
+                userEmail: event.target.email.value,
+                eventType: props.eventType.slug,
+                providerId: props.user.username,
+                booking: rescheduleUid,
+              },
+              userId: props.user.username,
+>>>>>>> a0db41d ((schedule) set up a dummy webhook route)
             });
 
             /*const res = await */ fetch("/api/book/" + user, {

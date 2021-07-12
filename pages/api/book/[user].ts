@@ -1,6 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import prisma from "../../../lib/prisma";
-import { CalendarEvent, createEvent, updateEvent } from "../../../lib/calendarClient";
+import { CalendarEvent, createEvent, updateEvent, watchEvent } from "../../../lib/calendarClient";
 import async from "async";
 import { v5 as uuidv5 } from "uuid";
 import short from "short-uuid";
@@ -321,6 +321,12 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     results.length > 0
       ? results[0].response.uid
       : translator.fromUUID(uuidv5(JSON.stringify(evt), uuidv5.URL));
+
+  try {
+    await Promise.all(calendarCredentials.map((credential) => watchEvent(credential, hashUID)));
+  } catch (err) {
+    console.error(`Unable to watch event '${hashUID}'`, err);
+  }
   // TODO Should just be set to the true case as soon as we have a "bare email" integration class.
   // UID generation should happen in the integration itself, not here.
   if (results.length === 0) {
