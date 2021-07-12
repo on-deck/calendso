@@ -28,23 +28,24 @@ export default function Shell(props) {
 
   return session ? (
     <div>
-      <div className="bg-gradient-to-b from-blue-600 via-blue-600 to-blue-300 pb-32">
-        <nav className="bg-blue-600">
+      <div className="bg-ondeck pb-32">
+        <nav className="bg-ondeck">
           <div className="max-w-7xl mx-auto sm:px-6 lg:px-8">
-            <div className="border-b border-blue-500">
+            <div className="border-b border-white">
               <div className="flex items-center justify-between h-16 px-4 sm:px-0">
                 <div className="flex items-center">
-                  <div className="flex-shrink-0">
+                  <div className="flex-shrink-0 flex space-x-4">
                     <img className="h-6" src="/calendso-white.svg" alt="Calendso" />
+                    <img className="h-6" src="/on-deck-white.svg" alt="On Deck" />
                   </div>
-                  <div className="hidden md:block">
+                  <div className="hidden lg:block">
                     <div className="ml-10 flex items-baseline space-x-4">
                       <Link href="/">
                         <a
                           className={
                             router.pathname == "/"
-                              ? "bg-blue-500 transition-colors duration-300 ease-in-out text-white px-3 py-2 rounded-md text-sm font-medium"
-                              : "text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                              ? "bg-white transition-colors duration-300 ease-in-out text-ondeck px-3 py-2 rounded-md text-sm font-medium"
+                              : "text-white hover:bg-white transition-colors duration-300 ease-in-out hover:text-ondeck px-3 py-2 rounded-md text-sm font-medium"
                           }>
                           Dashboard
                         </a>
@@ -53,8 +54,8 @@ export default function Shell(props) {
                         <a
                           className={
                             router.pathname.startsWith("/bookings")
-                              ? "bg-blue-500 transition-colors duration-300 ease-in-out text-white px-3 py-2 rounded-md text-sm font-medium"
-                              : "text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                              ? "bg-white transition-colors duration-300 ease-in-out text-ondeck px-3 py-2 rounded-md text-sm font-medium"
+                              : "text-white hover:bg-white transition-colors duration-300 ease-in-out hover:text-ondeck px-3 py-2 rounded-md text-sm font-medium"
                           }>
                           Bookings
                         </a>
@@ -63,8 +64,8 @@ export default function Shell(props) {
                         <a
                           className={
                             router.pathname.startsWith("/availability")
-                              ? "bg-blue-500 transition-colors duration-300 ease-in-out text-white px-3 py-2 rounded-md text-sm font-medium"
-                              : "text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                              ? "bg-white transition-colors duration-300 ease-in-out text-ondeck px-3 py-2 rounded-md text-sm font-medium"
+                              : "text-white hover:bg-white transition-colors duration-300 ease-in-out hover:text-ondeck px-3 py-2 rounded-md text-sm font-medium"
                           }>
                           Availability
                         </a>
@@ -73,8 +74,8 @@ export default function Shell(props) {
                         <a
                           className={
                             router.pathname.startsWith("/integrations")
-                              ? "bg-blue-500 transition-colors duration-300 ease-in-out text-white px-3 py-2 rounded-md text-sm font-medium"
-                              : "text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                              ? "bg-white transition-colors duration-300 ease-in-out text-ondeck px-3 py-2 rounded-md text-sm font-medium"
+                              : "text-white hover:bg-white transition-colors duration-300 ease-in-out hover:text-ondeck px-3 py-2 rounded-md text-sm font-medium"
                           }>
                           Integrations
                         </a>
@@ -83,8 +84,8 @@ export default function Shell(props) {
                         <a
                           className={
                             router.pathname.startsWith("/settings")
-                              ? "bg-blue-500 transition-colors duration-300 ease-in-out text-white px-3 py-2 rounded-md text-sm font-medium"
-                              : "text-white hover:bg-blue-500 transition-colors duration-300 ease-in-out hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                              ? "bg-white transition-colors duration-300 ease-in-out text-ondeck px-3 py-2 rounded-md text-sm font-medium"
+                              : "text-white hover:bg-white transition-colors duration-300 ease-in-out hover:text-ondeck px-3 py-2 rounded-md text-sm font-medium"
                           }>
                           Settings
                         </a>
@@ -92,8 +93,8 @@ export default function Shell(props) {
                     </div>
                   </div>
                 </div>
-                <div className="hidden md:block">
-                  <div className="ml-4 flex items-center md:ml-6">
+                <div className="hidden lg:block">
+                  <div className="ml-4 flex items-center lg:ml-6">
                     <div className="ml-3 relative">
                       <div>
                         <button
@@ -155,7 +156,7 @@ export default function Shell(props) {
                     </div>
                   </div>
                 </div>
-                <div className="-mr-2 flex md:hidden">
+                <div className="-mr-2 flex lg:hidden">
                   <button
                     onClick={toggleMobileMenu}
                     type="button"
@@ -172,14 +173,14 @@ export default function Shell(props) {
           </div>
 
           {mobileMenuExpanded && (
-            <div className="border-b border-blue-500 md:hidden bg-blue-600" id="mobile-menu">
+            <div className="border-b border-white lg:hidden bg-ondeck" id="mobile-menu">
               <div className="px-2 py-3 space-y-1 sm:px-3">
                 <Link href="/">
                   <a
                     className={
                       router.pathname == "/"
-                        ? "bg-blue-500 text-white block px-3 py-2 rounded-md text-base font-medium"
-                        : "text-gray-100 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                        ? "bg-white text-ondeck block px-3 py-2 rounded-md text-base font-medium"
+                        : "text-gray-100 hover:bg-white hover:text-ondeck block px-3 py-2 rounded-md text-base font-medium"
                     }>
                     Dashboard
                   </a>
@@ -188,8 +189,8 @@ export default function Shell(props) {
                   <a
                     className={
                       router.pathname.startsWith("/availability")
-                        ? "bg-blue-500 text-white block px-3 py-2 rounded-md text-base font-medium"
-                        : "text-gray-100 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                        ? "bg-white text-ondeck block px-3 py-2 rounded-md text-base font-medium"
+                        : "text-gray-100 hover:bg-white hover:text-ondeck block px-3 py-2 rounded-md text-base font-medium"
                     }>
                     Availability
                   </a>
@@ -198,14 +199,14 @@ export default function Shell(props) {
                   <a
                     className={
                       router.pathname.startsWith("/integrations")
-                        ? "bg-blue-500 text-white block px-3 py-2 rounded-md text-base font-medium"
-                        : "text-gray-100 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                        ? "bg-white text-ondeck block px-3 py-2 rounded-md text-base font-medium"
+                        : "text-gray-100 hover:bg-white hover:text-ondeck block px-3 py-2 rounded-md text-base font-medium"
                     }>
                     Integrations
                   </a>
                 </Link>
               </div>
-              <div className="pt-4 pb-3 border-t border-blue-500">
+              <div className="pt-4 pb-3 border-t border-white">
                 <div className="flex items-center px-5">
                   <div className="flex-shrink-0">
                     <img
@@ -226,7 +227,7 @@ export default function Shell(props) {
                 </div>
                 <div className="mt-3 px-2 space-y-1">
                   <Link href="/settings/profile">
-                    <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-100 hover:text-white hover:bg-gray-700">
+                    <a className="block px-3 py-2 rounded-md text-base font-medium text-gray-100 hover:text-ondeck hover:bg-white">
                       Your Profile
                     </a>
                   </Link>
@@ -234,15 +235,15 @@ export default function Shell(props) {
                     <a
                       className={
                         router.pathname.startsWith("/settings")
-                          ? "bg-blue-500 text-white block px-3 py-2 rounded-md text-base font-medium"
-                          : "text-gray-100 hover:bg-gray-700 hover:text-white block px-3 py-2 rounded-md text-base font-medium"
+                          ? "bg-white text-ondeck block px-3 py-2 rounded-md text-base font-medium"
+                          : "text-gray-100 hover:bg-white hover:text-ondeck block px-3 py-2 rounded-md text-base font-medium"
                       }>
                       Settings
                     </a>
                   </Link>
                   <button
                     onClick={logoutHandler}
-                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-100 hover:text-white hover:bg-gray-700">
+                    className="block w-full text-left px-3 py-2 rounded-md text-base font-medium text-gray-100 hover:text-ondeck hover:bg-white">
                     Sign out
                   </button>
                 </div>
@@ -252,7 +253,7 @@ export default function Shell(props) {
         </nav>
         <header className={props.noPaddingBottom ? "pt-10" : "py-10"}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-white">{props.heading}</h1>
+            <h1 className="text-3xl font-bold text-ondeck">{props.heading}</h1>
           </div>
         </header>
       </div>

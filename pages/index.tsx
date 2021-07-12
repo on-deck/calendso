@@ -72,7 +72,7 @@ export default function Home(props) {
                 <link rel="icon" href="/favicon.ico" />
             </Head>
 
-            <Shell heading="Dashboard">
+            <Shell heading="Your dashboard">
                 <div className="md:grid grid-cols-3 gap-4">
                     <div className="col-span-2">
                         <div className="rounded-lg bg-white shadow">
