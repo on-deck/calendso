@@ -253,7 +253,7 @@ export default function Shell(props) {
         </nav>
         <header className={props.noPaddingBottom ? "pt-10" : "py-10"}>
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <h1 className="text-3xl font-bold text-ondeck">{props.heading}</h1>
+            <h1 className="text-3xl font-bold text-white">{props.heading}</h1>
           </div>
         </header>
       </div>
