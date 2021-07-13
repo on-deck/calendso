@@ -118,10 +118,10 @@ export default function Book(props: any): JSX.Element {
                     userName: event.target.name.value,
                     userEmail: event.target.email.value,
                     eventType: props.eventType.slug,
-                    providerId: props.user.id,
+                    providerId: props.user.username,
                     booking: rescheduleUid,
                 },
-                userId: props.user.id,
+                userId: props.user.username,
             });
 
             /*const res = await */ fetch("/api/book/" + user, {
