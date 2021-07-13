@@ -53,7 +53,9 @@ export default function Login() {
                                 Sign In to Calendso
                             </h2>
                             <p className="antialiased text-[15px] leading-[21px] font-inter mt-2 font-inter">
-                                You will be signed in using your On Deck account.
+                                You will be signed in to a Calendso account managed by On Deck. You details
+                                will be used to create an account for you, but none of the data ever leaves On
+                                Deck.
                             </p>
                             <SignInWithOnDeck className="mt-8" />
                         </div>
