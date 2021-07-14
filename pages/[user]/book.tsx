@@ -14,7 +14,7 @@ import { LocationType } from "../../lib/location";
 import Avatar from "../../components/Avatar";
 import Button from "../../components/ui/Button";
 import { EventTypeCustomInputType } from "../../lib/eventTypeInput";
-import { analytics, AnalyticsTrackingEvent } from "@lib/analytics";
+import { AnalyticsTrackingEvent } from "@lib/analytics";
 
 dayjs.extend(utc);
 dayjs.extend(timezone);
@@ -37,16 +37,14 @@ export default function Book(props: any): JSX.Element {
         setPreferredTimeZone(localStorage.getItem("timeOption.preferredTimeZone") || dayjs.tz.guess());
         setIs24h(!!localStorage.getItem("timeOption.is24hClock"));
 
-        analytics.track({
-            event: AnalyticsTrackingEvent.TimeSelected,
-            properties: {
-                date,
-                eventType: props.eventType.slug,
-                providerId: user,
-            },
-            userId: user.toString(),
+        window.analytics.track(AnalyticsTrackingEvent.TimeSelected, {
+            action: "Time Selected",
+            category: "Booking",
+            date,
+            eventType: props.eventType.slug,
+            providerId: user,
         });
-    });
+    }, [date, props.eventType.slug, user]);
 
     const locationInfo = (type: LocationType) => locations.find((location) => location.type === type);
 
@@ -110,18 +108,16 @@ export default function Book(props: any): JSX.Element {
                 }
             }
 
-            analytics.track({
-                event: AnalyticsTrackingEvent.BookingConfirmed,
-                properties: {
-                    start: dayjs(date).format(),
-                    end: dayjs(date).add(props.eventType.length, "minute").format(),
-                    userName: event.target.name.value,
-                    userEmail: event.target.email.value,
-                    eventType: props.eventType.slug,
-                    providerId: props.user.username,
-                    booking: rescheduleUid,
-                },
-                userId: props.user.username,
+            window.analytics.track(AnalyticsTrackingEvent.BookingConfirmed, {
+                action: "Confirmed Booking",
+                category: "Booking",
+                start: dayjs(date).format(),
+                end: dayjs(date).add(props.eventType.length, "minute").format(),
+                userName: event.target.name.value,
+                userEmail: event.target.email.value,
+                eventType: props.eventType.slug,
+                providerId: user,
+                booking: rescheduleUid,
             });
 
             /*const res = await */ fetch("/api/book/" + user, {

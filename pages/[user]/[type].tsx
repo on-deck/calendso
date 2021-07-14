@@ -12,25 +12,27 @@ import Avatar from "../../components/Avatar";
 import { timeZone } from "../../lib/clock";
 import DatePicker from "../../components/booking/DatePicker";
 import PoweredByCalendso from "../../components/ui/PoweredByCalendso";
-import { analytics, AnalyticsTrackingEvent } from "@lib/analytics";
+import { AnalyticsTrackingEvent } from "@lib/analytics";
 
 export default function Type(props) {
     // Get router variables
     const router = useRouter();
-    const { rescheduleUid, type } = router.query;
+    const { id, rescheduleUid, type } = router.query;
 
     const [selectedDate, setSelectedDate] = useState<Dayjs>();
     const [isTimeOptionsOpen, setIsTimeOptionsOpen] = useState(false);
     const [timeFormat, setTimeFormat] = useState("h:mma");
 
     useEffect(() => {
-        analytics.track({
-            event: AnalyticsTrackingEvent.DateSelected,
-            properties: {
-                eventType: type,
-                providerId: props.user.id,
-            },
-            userId: props.user.id,
+        if (id) {
+            window.analytics.identify(id);
+        }
+
+        window.analytics.track(AnalyticsTrackingEvent.BookingPageOpened, {
+            action: "Event Page Opened",
+            category: "Booking",
+            eventType: type,
+            providerId: props.user.id,
         });
         // note(egor): need to run only on initial page load,
         // intentionally not providing all of the dependencies
@@ -38,14 +40,12 @@ export default function Type(props) {
     }, []);
 
     const changeDate = (date: Dayjs) => {
-        analytics.track({
-            event: AnalyticsTrackingEvent.DateSelected,
-            properties: {
-                date,
-                eventType: type,
-                providerId: props.user.id,
-            },
-            userId: props.user.id,
+        window.analytics.track(AnalyticsTrackingEvent.DateSelected, {
+            action: "Date Selected",
+            category: "Booking",
+            date,
+            eventType: type,
+            providerId: props.user.id,
         });
         setSelectedDate(date);
     };

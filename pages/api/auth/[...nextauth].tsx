@@ -1,7 +1,7 @@
 import NextAuth from "next-auth";
 import Providers from "next-auth/providers";
 import prisma from "../../../lib/prisma";
-import { analytics, AnalyticsTrackingEvent } from "../../../lib/analytics";
+import { serverAnalytics, AnalyticsTrackingEvent } from "../../../lib/analytics";
 import LaunchDarkly from "launchdarkly-node-server-sdk";
 
 const ldClient = LaunchDarkly.init(process.env.LAUNCHDARKLY_SERVER_SDK_KEY);
@@ -25,7 +25,7 @@ export default NextAuth({
     callbacks: {
         async signIn(user, account, profile) {
             const userId = profile?.["https://beondeck.com/fellow_id"] as number;
-            analytics.identify({ userId });
+            serverAnalytics.identify({ userId });
 
             const calendsoUser = await prisma.user.findFirst({
                 where: {
@@ -43,7 +43,7 @@ export default NextAuth({
                 await ldClient.close();
 
                 if (!canCreateAccount) {
-                    analytics.track({
+                    serverAnalytics.track({
                         event: AnalyticsTrackingEvent.LoginNotAllowed,
                         userId,
                     });
@@ -61,13 +61,13 @@ export default NextAuth({
                         id: userId,
                     },
                 });
-                analytics.track({
+                serverAnalytics.track({
                     event: AnalyticsTrackingEvent.LoginFirstTime,
                     properties: { category: "Auth", action: "Signed Up" },
                     userId,
                 });
             } else {
-                analytics.track({
+                serverAnalytics.track({
                     event: AnalyticsTrackingEvent.LoginSuccess,
                     properties: { category: "Auth", action: "Logged In" },
                     userId,
