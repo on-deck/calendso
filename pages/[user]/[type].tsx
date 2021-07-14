@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { GetServerSideProps } from "next";
 import Head from "next/head";
 import { ClockIcon, GlobeIcon, ChevronDownIcon } from "@heroicons/react/solid";
@@ -22,6 +22,20 @@ export default function Type(props) {
     const [selectedDate, setSelectedDate] = useState<Dayjs>();
     const [isTimeOptionsOpen, setIsTimeOptionsOpen] = useState(false);
     const [timeFormat, setTimeFormat] = useState("h:mma");
+
+    useEffect(() => {
+        analytics.track({
+            event: AnalyticsTrackingEvent.DateSelected,
+            properties: {
+                eventType: type,
+                providerId: props.user.id,
+            },
+            userId: props.user.id,
+        });
+        // note(egor): need to run only on initial page load,
+        // intentionally not providing all of the dependencies
+        // eslint-disable-next-line
+    }, []);
 
     const changeDate = (date: Dayjs) => {
         analytics.track({
