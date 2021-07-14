@@ -105,10 +105,10 @@ export default function Home(props) {
                                             <div className="min-w-0 flex-1 sm:flex sm:items-center sm:justify-between">
                                                 <div className="truncate">
                                                     <div className="flex text-sm">
-                                                        <p className="font-medium text-blue-600 truncate">
+                                                        <p className="font-medium text-blue-600 flex-shrink-0 truncate">
                                                             {type.title}
                                                         </p>
-                                                        <p className="ml-1 flex-shrink-0 font-normal text-gray-500">
+                                                        <p className="ml-1 truncate font-normal text-gray-500">
                                                             in {type.description}
                                                         </p>
                                                     </div>
