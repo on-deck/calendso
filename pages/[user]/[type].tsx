@@ -157,6 +157,7 @@ export default function Type(props) {
                             organizerTimeZone={props.eventType.timeZone || props.user.timeZone}
                             inviteeTimeZone={timeZone()}
                             eventLength={props.eventType.length}
+                            minimumAdvance={props.eventType.minimumAdvance}
                         />
                         {selectedDate && (
                             <AvailableTimes
@@ -218,6 +219,7 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
             length: true,
             availability: true,
             timeZone: true,
+            minimumAdvance: true,
         },
     });
 

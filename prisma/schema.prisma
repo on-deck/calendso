@@ -25,6 +25,7 @@ model EventType {
   eventName     String?
   customInputs  EventTypeCustomInput[]
   timeZone      String?
+  minimumAdvance Int @default(1)
 }
 
 model Credential {
