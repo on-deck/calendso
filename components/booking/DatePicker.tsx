@@ -14,6 +14,7 @@ const DatePicker = ({
   organizerTimeZone,
   inviteeTimeZone,
   eventLength,
+  minimumAdvance,
 }) => {
   const [calendar, setCalendar] = useState([]);
   const [selectedMonth, setSelectedMonth]: number = useState();
@@ -47,6 +48,7 @@ const DatePicker = ({
     const isDisabled = (day: number) => {
       const date: Dayjs = inviteeDate.date(day);
       return (
+        date.endOf("day").isBefore(dayjs().add(minimumAdvance, "day").endOf("day")) ||
         date.endOf("day").isBefore(dayjs().tz(inviteeTimeZone)) ||
         !getSlots({
           inviteeDate: date,
