@@ -1,15 +1,16 @@
-import Head from 'next/head';
-import Link from 'next/link';
-import prisma from '../../lib/prisma';
-import Modal from '../../components/Modal';
-import Shell from '../../components/Shell';
-import {useRouter} from 'next/router';
-import {useRef, useState} from 'react';
-import {getSession, useSession} from 'next-auth/client';
-import {ClockIcon, PlusIcon} from '@heroicons/react/outline';
+import Head from "next/head";
+import Link from "next/link";
+import prisma from "../../lib/prisma";
+import Modal from "../../components/Modal";
+import Shell from "../../components/Shell";
+import { useRouter } from "next/router";
+import { useRef, useState } from "react";
+import { getSession, useSession } from "next-auth/client";
+import { ClockIcon, PlusIcon } from "@heroicons/react/outline";
+import CreateEventTypeDropdown from "../../components/od/create-event-type";
 
 export default function Availability(props) {
-    const [ session, loading ] = useSession();
+    const [session, loading] = useSession();
     const router = useRouter();
     const [showAddModal, setShowAddModal] = useState(false);
     const [successModalOpen, setSuccessModalOpen] = useState(false);
@@ -40,13 +41,16 @@ export default function Availability(props) {
         setShowChangeTimesModal(!showChangeTimesModal);
     }
 
-    const closeSuccessModal = () => { setSuccessModalOpen(false); router.replace(router.asPath); }
+    const closeSuccessModal = () => {
+        setSuccessModalOpen(false);
+        router.replace(router.asPath);
+    };
 
-    function convertMinsToHrsMins (mins) {
+    function convertMinsToHrsMins(mins) {
         let h = Math.floor(mins / 60);
         let m = mins % 60;
-        h = h < 10 ? '0' + h : h;
-        m = m < 10 ? '0' + m : m;
+        h = h < 10 ? "0" + h : h;
+        m = m < 10 ? "0" + m : m;
         return `${h}:${m}`;
     }
 
@@ -62,12 +66,19 @@ export default function Availability(props) {
 
         // TODO: Add validation
 
-        const response = await fetch('/api/availability/eventtype', {
-            method: 'POST',
-            body: JSON.stringify({title: enteredTitle, slug: enteredSlug, description: enteredDescription, length: enteredLength, hidden: enteredIsHidden, minimumAdvance: enteredMinimumAdvance}),
+        const response = await fetch("/api/availability/eventtype", {
+            method: "POST",
+            body: JSON.stringify({
+                title: enteredTitle,
+                slug: enteredSlug,
+                description: enteredDescription,
+                length: enteredLength,
+                hidden: enteredIsHidden,
+                minimumAdvance: enteredMinimumAdvance,
+            }),
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
 
         if (enteredTitle && enteredLength) {
@@ -92,19 +103,21 @@ export default function Availability(props) {
 
         // TODO: Add validation
 
-        const response = await fetch('/api/availability/day', {
-            method: 'PATCH',
-            body: JSON.stringify({start: startMins, end: endMins, buffer: bufferMins}),
+        const response = await fetch("/api/availability/day", {
+            method: "PATCH",
+            body: JSON.stringify({ start: startMins, end: endMins, buffer: bufferMins }),
             headers: {
-                'Content-Type': 'application/json'
-            }
+                "Content-Type": "application/json",
+            },
         });
 
         setShowChangeTimesModal(false);
         setSuccessModalOpen(true);
     }
 
-    return(
+    console.log(props.user);
+
+    return (
         <div>
             <Head>
                 <title>Availability | Calendso</title>
@@ -112,13 +125,13 @@ export default function Availability(props) {
             </Head>
             <Shell heading="Availability">
                 <div className="mb-4 sm:flex sm:items-center sm:justify-between">
-                    <h3 className="text-lg leading-6 font-medium text-white">
-                        Event Types
-                    </h3>
+                    <h3 className="text-lg leading-6 font-medium text-white">Event Types</h3>
                     <div className="mt-3 sm:mt-0 sm:ml-4">
-                        <button onClick={toggleAddModal} type="button" className="btn-sm btn-white">
-                            New event type
-                        </button>
+                        <CreateEventTypeDropdown
+                            hidePitch={props.types.some((type) => type.slug === "pitch-feedback")}
+                            hideProduct={props.types.some((type) => type.slug === "product-feedback")}
+                            user={props.user}
+                        />
                     </div>
                 </div>
                 <div className="flex flex-col mb-8">
@@ -128,13 +141,19 @@ export default function Availability(props) {
                                 <table className="min-w-full divide-y divide-gray-200">
                                     <thead className="bg-gray-50">
                                         <tr>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Name
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Description
                                             </th>
-                                            <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            <th
+                                                scope="col"
+                                                className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                                                 Length
                                             </th>
                                             <th scope="col" className="relative px-6 py-3">
@@ -143,15 +162,15 @@ export default function Availability(props) {
                                         </tr>
                                     </thead>
                                     <tbody className="bg-white divide-y divide-gray-200">
-                                        {props.types.map((eventType) =>
+                                        {props.types.map((eventType) => (
                                             <tr>
                                                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900 align-top">
                                                     {eventType.title}
-                                                    {eventType.hidden &&
+                                                    {eventType.hidden && (
                                                         <span className="ml-2 inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-gray-100 text-gray-800">
                                                             Hidden
                                                         </span>
-                                                    }
+                                                    )}
                                                 </td>
                                                 <td className="px-6 py-4 text-sm text-gray-500 align-top">
                                                     {eventType.description}
@@ -160,11 +179,24 @@ export default function Availability(props) {
                                                     {eventType.length} minutes
                                                 </td>
                                                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium align-top">
-                                                    <Link href={"/" + props.user.username + "/" + eventType.slug}><a target="_blank" className="text-blue-600 hover:text-blue-900 mr-2">View</a></Link>
-                                                    <Link href={"/availability/event/" + eventType.id}><a className="text-blue-600 hover:text-blue-900">Edit</a></Link>
+                                                    <Link
+                                                        href={
+                                                            "/" + props.user.username + "/" + eventType.slug
+                                                        }>
+                                                        <a
+                                                            target="_blank"
+                                                            className="text-blue-600 hover:text-blue-900 mr-2">
+                                                            View
+                                                        </a>
+                                                    </Link>
+                                                    <Link href={"/availability/event/" + eventType.id}>
+                                                        <a className="text-blue-600 hover:text-blue-900">
+                                                            Edit
+                                                        </a>
+                                                    </Link>
                                                 </td>
                                             </tr>
-                                        )}
+                                        ))}
                                     </tbody>
                                 </table>
                             </div>
@@ -178,22 +210,37 @@ export default function Availability(props) {
                         </h3>
                         <div className="mt-2 max-w-xl text-sm text-gray-500">
                             <p>
-                                Currently, your day is set to start at {convertMinsToHrsMins(props.user.startTime)} and end at {convertMinsToHrsMins(props.user.endTime)}.
+                                Currently, your day is set to start at{" "}
+                                {convertMinsToHrsMins(props.user.startTime)} and end at{" "}
+                                {convertMinsToHrsMins(props.user.endTime)}.
                             </p>
                         </div>
                         <div className="mt-5">
-                            <button onClick={toggleChangeTimesModal} type="button" className="btn btn-primary">
+                            <button
+                                onClick={toggleChangeTimesModal}
+                                type="button"
+                                className="btn btn-primary">
                                 Change available times
                             </button>
                         </div>
                     </div>
                 </div>
-                {showAddModal &&
-                    <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                {showAddModal && (
+                    <div
+                        className="fixed z-10 inset-0 overflow-y-auto"
+                        aria-labelledby="modal-title"
+                        role="dialog"
+                        aria-modal="true">
                         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                            <div
+                                className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                                aria-hidden="true"></div>
 
-                            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                            <span
+                                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                                aria-hidden="true">
+                                &#8203;
+                            </span>
 
                             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                                 <div className="sm:flex sm:items-start mb-4">
@@ -201,7 +248,9 @@ export default function Availability(props) {
                                         <PlusIcon className="h-6 w-6 text-blue-600" />
                                     </div>
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                        <h3
+                                            className="text-lg leading-6 font-medium text-gray-900"
+                                            id="modal-title">
                                             Add a new event type
                                         </h3>
                                         <div>
@@ -214,13 +263,29 @@ export default function Availability(props) {
                                 <form onSubmit={createEventTypeHandler}>
                                     <div>
                                         <div className="mb-4">
-                                            <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
+                                            <label
+                                                htmlFor="title"
+                                                className="block text-sm font-medium text-gray-700">
+                                                Title
+                                            </label>
                                             <div className="mt-1">
-                                                <input ref={titleRef} type="text" name="title" id="title" required className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="Quick Chat" />
+                                                <input
+                                                    ref={titleRef}
+                                                    type="text"
+                                                    name="title"
+                                                    id="title"
+                                                    required
+                                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder="Quick Chat"
+                                                />
                                             </div>
                                         </div>
                                         <div className="mb-4">
-                                            <label htmlFor="slug" className="block text-sm font-medium text-gray-700">URL</label>
+                                            <label
+                                                htmlFor="slug"
+                                                className="block text-sm font-medium text-gray-700">
+                                                URL
+                                            </label>
                                             <div className="mt-1">
                                                 <div className="flex rounded-md shadow-sm">
                                                     <span className="inline-flex items-center px-3 rounded-l-md border border-r-0 border-gray-300 bg-gray-50 text-gray-500 sm:text-sm">
@@ -238,29 +303,62 @@ export default function Availability(props) {
                                             </div>
                                         </div>
                                         <div className="mb-4">
-                                            <label htmlFor="description" className="block text-sm font-medium text-gray-700">Description</label>
+                                            <label
+                                                htmlFor="description"
+                                                className="block text-sm font-medium text-gray-700">
+                                                Description
+                                            </label>
                                             <div className="mt-1">
-                                                <textarea ref={descriptionRef} name="description" id="description" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="A quick video meeting."></textarea>
+                                                <textarea
+                                                    ref={descriptionRef}
+                                                    name="description"
+                                                    id="description"
+                                                    className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder="A quick video meeting."></textarea>
                                             </div>
                                         </div>
                                         <div className="mb-4">
-                                            <label htmlFor="length" className="block text-sm font-medium text-gray-700">Length</label>
+                                            <label
+                                                htmlFor="length"
+                                                className="block text-sm font-medium text-gray-700">
+                                                Length
+                                            </label>
                                             <div className="mt-1 relative rounded-md shadow-sm">
-                                                <input ref={lengthRef} type="number" name="length" id="length" required className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-20 sm:text-sm border-gray-300 rounded-md" placeholder="15" />
+                                                <input
+                                                    ref={lengthRef}
+                                                    type="number"
+                                                    name="length"
+                                                    id="length"
+                                                    required
+                                                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-20 sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder="15"
+                                                />
                                                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-sm">
                                                     minutes
                                                 </div>
                                             </div>
                                         </div>
                                         <div className="mb-4">
-                                            <label htmlFor="minimumAdvance" className="block text-sm font-medium text-gray-700">Minimum advance</label>
+                                            <label
+                                                htmlFor="minimumAdvance"
+                                                className="block text-sm font-medium text-gray-700">
+                                                Minimum advance
+                                            </label>
                                             <div>
                                                 <p className="text-sm text-gray-500">
                                                     Set the minimum number of days before people can book.
                                                 </p>
                                             </div>
                                             <div className="mt-1 relative rounded-md shadow-sm">
-                                                <input ref={minimumAdvanceRef} type="number" name="minimumAdvance" id="minimumAdvance" required className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-20 sm:text-sm border-gray-300 rounded-md" placeholder="1" />
+                                                <input
+                                                    ref={minimumAdvanceRef}
+                                                    type="number"
+                                                    name="minimumAdvance"
+                                                    id="minimumAdvance"
+                                                    required
+                                                    className="focus:ring-blue-500 focus:border-blue-500 block w-full pr-20 sm:text-sm border-gray-300 rounded-md"
+                                                    placeholder="1"
+                                                />
                                                 <div className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-400 text-sm">
                                                     days
                                                 </div>
@@ -279,10 +377,15 @@ export default function Availability(props) {
                                                 />
                                             </div>
                                             <div className="ml-3 text-sm">
-                                                <label htmlFor="ishidden" className="font-medium text-gray-700">
+                                                <label
+                                                    htmlFor="ishidden"
+                                                    className="font-medium text-gray-700">
                                                     Hide this event type
                                                 </label>
-                                                <p className="text-gray-500">Hide the event type from your page, so it can only be booked through it's URL.</p>
+                                                <p className="text-gray-500">
+                                                    Hide the event type from your page, so it can only be
+                                                    booked through it's URL.
+                                                </p>
                                             </div>
                                         </div>
                                     </div>
@@ -291,7 +394,10 @@ export default function Availability(props) {
                                         <button type="submit" className="btn btn-primary">
                                             Create
                                         </button>
-                                        <button onClick={toggleAddModal} type="button" className="btn btn-white mr-2">
+                                        <button
+                                            onClick={toggleAddModal}
+                                            type="button"
+                                            className="btn btn-white mr-2">
                                             Cancel
                                         </button>
                                     </div>
@@ -299,13 +405,23 @@ export default function Availability(props) {
                             </div>
                         </div>
                     </div>
-                }
-                {showChangeTimesModal &&
-                    <div className="fixed z-10 inset-0 overflow-y-auto" aria-labelledby="modal-title" role="dialog" aria-modal="true">
+                )}
+                {showChangeTimesModal && (
+                    <div
+                        className="fixed z-10 inset-0 overflow-y-auto"
+                        aria-labelledby="modal-title"
+                        role="dialog"
+                        aria-modal="true">
                         <div className="flex items-end justify-center min-h-screen pt-4 px-4 pb-20 text-center sm:block sm:p-0">
-                            <div className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity" aria-hidden="true"></div>
+                            <div
+                                className="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+                                aria-hidden="true"></div>
 
-                            <span className="hidden sm:inline-block sm:align-middle sm:h-screen" aria-hidden="true">&#8203;</span>
+                            <span
+                                className="hidden sm:inline-block sm:align-middle sm:h-screen"
+                                aria-hidden="true">
+                                &#8203;
+                            </span>
 
                             <div className="inline-block align-bottom bg-white rounded-lg px-4 pt-5 pb-4 text-left overflow-hidden shadow-xl transform transition-all sm:my-8 sm:align-middle sm:max-w-lg sm:w-full sm:p-6">
                                 <div className="sm:flex sm:items-start mb-4">
@@ -313,58 +429,142 @@ export default function Availability(props) {
                                         <ClockIcon className="h-6 w-6 text-blue-600" />
                                     </div>
                                     <div className="mt-3 text-center sm:mt-0 sm:ml-4 sm:text-left">
-                                        <h3 className="text-lg leading-6 font-medium text-gray-900" id="modal-title">
+                                        <h3
+                                            className="text-lg leading-6 font-medium text-gray-900"
+                                            id="modal-title">
                                             Change your available times
                                         </h3>
                                         <div>
                                             <p className="text-sm text-gray-500">
-                                                Set the start and end time of your day and a minimum buffer between your meetings.
+                                                Set the start and end time of your day and a minimum buffer
+                                                between your meetings.
                                             </p>
                                         </div>
                                     </div>
                                 </div>
                                 <form onSubmit={updateStartEndTimesHandler}>
                                     <div className="flex mb-4">
-                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">Start time</label>
+                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">
+                                            Start time
+                                        </label>
                                         <div>
-                                            <label htmlFor="hours" className="sr-only">Hours</label>
-                                            <input ref={startHoursRef} type="number" name="hours" id="hours" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="9" defaultValue={convertMinsToHrsMins(props.user.startTime).split(":")[0]} />
+                                            <label htmlFor="hours" className="sr-only">
+                                                Hours
+                                            </label>
+                                            <input
+                                                ref={startHoursRef}
+                                                type="number"
+                                                name="hours"
+                                                id="hours"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="9"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.startTime).split(":")[0]
+                                                }
+                                            />
                                         </div>
                                         <span className="mx-2 pt-1">:</span>
                                         <div>
-                                            <label htmlFor="minutes" className="sr-only">Minutes</label>
-                                            <input ref={startMinsRef} type="number" name="minutes" id="minutes" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="30" defaultValue={convertMinsToHrsMins(props.user.startTime).split(":")[1]} />
+                                            <label htmlFor="minutes" className="sr-only">
+                                                Minutes
+                                            </label>
+                                            <input
+                                                ref={startMinsRef}
+                                                type="number"
+                                                name="minutes"
+                                                id="minutes"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="30"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.startTime).split(":")[1]
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="flex mb-4">
-                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">End time</label>
+                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">
+                                            End time
+                                        </label>
                                         <div>
-                                            <label htmlFor="hours" className="sr-only">Hours</label>
-                                            <input ref={endHoursRef} type="number" name="hours" id="hours" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="17" defaultValue={convertMinsToHrsMins(props.user.endTime).split(":")[0]} />
+                                            <label htmlFor="hours" className="sr-only">
+                                                Hours
+                                            </label>
+                                            <input
+                                                ref={endHoursRef}
+                                                type="number"
+                                                name="hours"
+                                                id="hours"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="17"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.endTime).split(":")[0]
+                                                }
+                                            />
                                         </div>
                                         <span className="mx-2 pt-1">:</span>
                                         <div>
-                                            <label htmlFor="minutes" className="sr-only">Minutes</label>
-                                            <input ref={endMinsRef} type="number" name="minutes" id="minutes" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="30" defaultValue={convertMinsToHrsMins(props.user.endTime).split(":")[1]} />
+                                            <label htmlFor="minutes" className="sr-only">
+                                                Minutes
+                                            </label>
+                                            <input
+                                                ref={endMinsRef}
+                                                type="number"
+                                                name="minutes"
+                                                id="minutes"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="30"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.endTime).split(":")[1]
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="flex mb-4">
-                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">Buffer</label>
+                                        <label className="w-1/4 pt-2 block text-sm font-medium text-gray-700">
+                                            Buffer
+                                        </label>
                                         <div>
-                                            <label htmlFor="hours" className="sr-only">Hours</label>
-                                            <input ref={bufferHoursRef} type="number" name="hours" id="hours" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="0" defaultValue={convertMinsToHrsMins(props.user.bufferTime).split(":")[0]} />
+                                            <label htmlFor="hours" className="sr-only">
+                                                Hours
+                                            </label>
+                                            <input
+                                                ref={bufferHoursRef}
+                                                type="number"
+                                                name="hours"
+                                                id="hours"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="0"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.bufferTime).split(":")[0]
+                                                }
+                                            />
                                         </div>
                                         <span className="mx-2 pt-1">:</span>
                                         <div>
-                                            <label htmlFor="minutes" className="sr-only">Minutes</label>
-                                            <input ref={bufferMinsRef} type="number" name="minutes" id="minutes" className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md" placeholder="10" defaultValue={convertMinsToHrsMins(props.user.bufferTime).split(":")[1]} />
+                                            <label htmlFor="minutes" className="sr-only">
+                                                Minutes
+                                            </label>
+                                            <input
+                                                ref={bufferMinsRef}
+                                                type="number"
+                                                name="minutes"
+                                                id="minutes"
+                                                className="shadow-sm focus:ring-blue-500 focus:border-blue-500 block w-full sm:text-sm border-gray-300 rounded-md"
+                                                placeholder="10"
+                                                defaultValue={
+                                                    convertMinsToHrsMins(props.user.bufferTime).split(":")[1]
+                                                }
+                                            />
                                         </div>
                                     </div>
                                     <div className="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
                                         <button type="submit" className="btn btn-primary">
                                             Update
                                         </button>
-                                        <button onClick={toggleChangeTimesModal} type="button" className="btn btn-white mr-2">
+                                        <button
+                                            onClick={toggleChangeTimesModal}
+                                            type="button"
+                                            className="btn btn-white mr-2">
                                             Cancel
                                         </button>
                                     </div>
@@ -372,8 +572,13 @@ export default function Availability(props) {
                             </div>
                         </div>
                     </div>
-                }
-                <Modal heading="Start and end times changed" description="The start and end times for your day have been changed successfully." open={successModalOpen} handleClose={closeSuccessModal} />
+                )}
+                <Modal
+                    heading="Start and end times changed"
+                    description="The start and end times for your day have been changed successfully."
+                    open={successModalOpen}
+                    handleClose={closeSuccessModal}
+                />
             </Shell>
         </div>
     );
@@ -382,7 +587,7 @@ export default function Availability(props) {
 export async function getServerSideProps(context) {
     const session = await getSession(context);
     if (!session) {
-        return { redirect: { permanent: false, destination: '/auth/login' } };
+        return { redirect: { permanent: false, destination: "/auth/login" } };
     }
 
     const user = await prisma.user.findFirst({
@@ -394,8 +599,9 @@ export async function getServerSideProps(context) {
             username: true,
             startTime: true,
             endTime: true,
-            bufferTime: true
-        }
+            bufferTime: true,
+            timeZone: true,
+        },
     });
 
     const types = await prisma.eventType.findMany({
@@ -408,10 +614,10 @@ export async function getServerSideProps(context) {
             slug: true,
             description: true,
             length: true,
-            hidden: true
-        }
+            hidden: true,
+        },
     });
     return {
-      props: {user, types}, // will be passed to the page component as props
-    }
+        props: { user, types }, // will be passed to the page component as props
+    };
 }
