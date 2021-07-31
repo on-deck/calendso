@@ -36,8 +36,8 @@ export default NextAuth({
             if (!calendsoUser) {
                 await prisma.user.create({
                     data: {
-                        avatar: user.image,
-                        name: user.name,
+                        avatar: profile.picture as string,
+                        name: profile.name,
                         email: user.email,
                         emailVerified: new Date(),
                         username: String(userId),
