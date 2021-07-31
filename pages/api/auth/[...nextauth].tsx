@@ -34,23 +34,6 @@ export default NextAuth({
             });
 
             if (!calendsoUser) {
-                await ldClient.waitForInitialization();
-                const canCreateAccount = await ldClient.variation(
-                    "proj-feedback-hub",
-                    { key: String(userId) },
-                    false
-                );
-                await ldClient.close();
-
-                if (!canCreateAccount) {
-                    serverAnalytics.track({
-                        event: AnalyticsTrackingEvent.LoginNotAllowed,
-                        userId,
-                    });
-                    throw new Error(
-                        "On Deck Calendso is in closed beta right now. We've recorded your interest in it and will notify you once it's available."
-                    );
-                }
                 await prisma.user.create({
                     data: {
                         avatar: user.image,
