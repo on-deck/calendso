@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { getSession } from "next-auth/client";
+import { fetchUserAvailability } from "pages/api/availability/[user]";
 import prisma from "../../../lib/prisma";
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
@@ -124,5 +125,25 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
         });
 
         res.status(200).json({ message: "Event deleted successfully" });
+    }
+
+    if (req.method == "GET") {
+        const { dateFrom, dateTo } = req.query;
+        const users = await prisma.user.findMany({
+            where: {
+                eventTypes: { some: { slug: req.query.slug as string } },
+            },
+            select: {
+                credentials: true,
+                timeZone: true,
+                bufferTime: true,
+            },
+        });
+
+        const usersWithAvailability = await Promise.all(
+            users.map((user) => fetchUserAvailability({ dateFrom, dateTo }, user))
+        );
+
+        res.status(200).json(usersWithAvailability);
     }
 }
