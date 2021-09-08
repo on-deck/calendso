@@ -120,7 +120,7 @@ export default function Success(props) {
                           props.eventType.description
                         }` + (location ? "&location=" + encodeURIComponent(location) : "")
                       }>
-                      <a className="mx-2 btn-wide btn-white">
+                      <a className="mx-2 btn-wide btn-white" target="_blank" rel="noopener noreferrer">
                         <svg
                           className="inline-block w-4 h-4 mr-1 -mt-1"
                           fill="currentColor"
