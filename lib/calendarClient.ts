@@ -372,6 +372,7 @@ const GoogleCalendar = (credential): CalendarApiAdapter => {
             {
               auth: myGoogleAuth,
               calendarId: "primary",
+              sendUpdates: "all",
               resource: payload,
             },
             function (err, event) {
