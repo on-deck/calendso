@@ -5,7 +5,7 @@ import { ExclamationIcon } from "@heroicons/react/solid";
 
 const AvailableTimes = ({ date, eventLength, eventTypeId, workingHours, timeFormat, user }) => {
     const router = useRouter();
-    const { email, name, rescheduleUid } = router.query;
+    const { email, name, id, rescheduleUid } = router.query;
     const { slots, isFullyBooked, hasErrors } = Slots({ date, eventLength, workingHours });
     return (
         <div className="sm:pl-4 mt-8 sm:mt-0 text-center sm:w-1/3  md:max-h-97 overflow-y-auto">
@@ -20,7 +20,8 @@ const AvailableTimes = ({ date, eventLength, eventTypeId, workingHours, timeForm
                                 `/${user.username}/book?date=${slot.utc().format()}&type=${eventTypeId}` +
                                 (rescheduleUid ? "&rescheduleUid=" + rescheduleUid : "") +
                                 (email ? "&email=" + email : "") +
-                                (name ? "&name=" + name : "")
+                                (name ? "&name=" + name : "") +
+                                (id ? "&id=" + id : "")
                             }>
                             <a className="block font-medium mb-4 text-blue-600 border border-blue-600 rounded hover:text-white hover:bg-blue-600 py-4">
                                 {slot.format(timeFormat)}
