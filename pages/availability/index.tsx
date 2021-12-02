@@ -128,6 +128,7 @@ export default function Availability(props) {
                     <h3 className="text-lg leading-6 font-medium text-white">Event Types</h3>
                     <div className="mt-3 sm:mt-0 sm:ml-4">
                         <CreateEventTypeDropdown
+                            hideOnDeck={props.types.some((type) => type.slug === "ondeck-feedback")}
                             hidePitch={props.types.some((type) => type.slug === "pitch-feedback")}
                             hideProduct={props.types.some((type) => type.slug === "product-feedback")}
                             user={props.user}

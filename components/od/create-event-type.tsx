@@ -18,9 +18,37 @@ const DEFAULT_AVAILABILITY = {
     ],
 };
 
-export default function CreateEventTypeDropdown({ hidePitch, hideProduct, user }) {
-    if (hidePitch && hideProduct) {
+export default function CreateEventTypeDropdown({ hideOnDeck, hidePitch, hideProduct, user }) {
+    if (hideOnDeck && hidePitch && hideProduct) {
         return null;
+    }
+
+    async function createOnDeckFeedbackEventType(event) {
+        event.preventDefault();
+
+        const body = {
+            availability: DEFAULT_AVAILABILITY,
+            timeZone: user.timeZone,
+            title: "On Deck Feedback",
+            slug: "ondeck-feedback",
+            description: `The On Deck team is here to support your journey through the program. In addition to your dedicated touchpoints on our team, other Build Partners and Build Advisors (that’s me!) volunteer a limited amount of time to help founders. If you think my background is well aligned with your needs, let’s chat!`,
+            length: 30,
+            hidden: false,
+            minimumAdvance: 1,
+            customInputs: [
+                {
+                    type: "textLong",
+                    label: "What are you hoping to achieve or make progress on with this session (required)",
+                    required: true,
+                },
+                {
+                    type: "textLong",
+                    label: "A link to any additional context that will help us make the most of our time together (optional)",
+                    required: true,
+                },
+            ],
+        };
+        return request(body);
     }
 
     async function createPitchFeedbackEventType(event) {
@@ -129,6 +157,22 @@ export default function CreateEventTypeDropdown({ hidePitch, hideProduct, user }
                                                     "block px-4 py-2 text-sm"
                                                 )}>
                                                 Product Feedback
+                                            </a>
+                                        )}
+                                    </Menu.Item>
+                                )}
+
+                                {!hideOnDeck && (
+                                    <Menu.Item>
+                                        {({ active }) => (
+                                            <a
+                                                href="#"
+                                                onClick={createOnDeckFeedbackEventType}
+                                                className={classNames(
+                                                    active ? "bg-gray-100 text-gray-900" : "text-gray-700",
+                                                    "block px-4 py-2 text-sm"
+                                                )}>
+                                                On Deck Feedback
                                             </a>
                                         )}
                                     </Menu.Item>
